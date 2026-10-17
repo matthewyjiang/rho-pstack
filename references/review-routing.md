@@ -9,14 +9,14 @@ Rho binds models in agent definitions, not in `agent` arguments, so the plugin s
 read-only reviewers pinned to different model families in
 `io.github.matthewyjiang.rho/agents/`:
 
-| Agent id | Family | Default binding |
-| --- | --- | --- |
-| `pstack-reviewer-openai` | OpenAI GPT | `openai-codex` / `gpt-6.1-sol` |
-| `pstack-reviewer-anthropic` | Anthropic Claude | `cliproxyapi` / `anthropic/claude-opus-5-5` |
-| `reviewer` (built-in) | parent's family | inherits the parent model |
+| Agent id | Family |
+| --- | --- |
+| `pstack-reviewer-openai` | OpenAI GPT |
+| `pstack-reviewer-anthropic` | Anthropic Claude |
+| `reviewer` (built-in) | parent's family (inherits the parent model) |
 
-The id names the family; the binding is Matt's default. A user or project agent file
-with the same id replaces it, so other setups rebind there, not here. Read the
+The id names the family; the definition's frontmatter holds the binding. A user or
+project agent file with the same id replaces it, so other setups rebind there. Read the
 actual binding from the run result or `rho` action `agents`. An id is not proof of a
 model, and a loaded definition is not proof of working credentials.
 

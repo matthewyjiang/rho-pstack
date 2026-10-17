@@ -20,10 +20,9 @@ which pin model families, or from host model-selecting delegation.
    context. A moving snapshot invalidates affected conclusions.
 2. **Pick the panel.** Default to `pstack-reviewer-openai` and
    `pstack-reviewer-anthropic` through native `agent` calls; this also works under
-   T3 Code. If one is not loaded or fails, fall back per review routing: the
-   built-in `reviewer` counts as the parent's family, so it keeps diversity only
-   when that family differs from the surviving reviewer's. For other models, or to
-   restore a lost family, use host model-selecting delegation (in T3, inspect
+   T3 Code. If one is unavailable, fall back and count families per review
+   routing. For other models, or to restore a lost family, use host
+   model-selecting delegation (in T3, inspect
    `orchestrator_capabilities` and `delegate_task` and the live catalog). Need at
    least two genuinely different families; do not infer diversity from ids. Without
    them, state **cross-model interrogation unavailable**, and offer a same-model

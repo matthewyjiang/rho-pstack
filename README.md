@@ -56,15 +56,17 @@ clients ignore it.
 | `pstack-reviewer-openai` | OpenAI GPT | `openai-codex` / `gpt-6.1-sol` |
 | `pstack-reviewer-anthropic` | Anthropic Claude | `cliproxyapi` / `anthropic/claude-opus-5-5` |
 
-Both are `runtime: rho` with read, search, `skill` and shell tools and no edit
-tools, so they also run under T3 Code host delegation.
+Both are `runtime: rho`, so they also run under T3 Code host delegation. They have
+read, search, `skill` and shell tools and no edit tools.
 
 - **Rho version.** Loading these needs a Rho build with plugin-agent support. Older
   builds load only the skills, and the review skills fall back to `reviewer`.
 - **Rebinding.** The bindings are Matt's setup; `cliproxyapi` is a custom provider.
-  To use your own model, put an agent file with the same id in `~/.agents/agents`,
-  `~/.rho/agents` or `<project>/.agents/agents`. User and project agent files
-  override plugin agents with the same id.
+  To use your own model, copy the shipped file into `~/.agents/agents`,
+  `~/.rho/agents` or `<project>/.agents/agents` and change only `provider`/`model`.
+  An override replaces the whole definition, so keep `tools` and the body; omitting
+  `tools` grants every tool, including edits. User and project agent files override
+  plugin agents with the same id.
 - **Plugin scope.** A project-scope plugin overrides a user-scope one. A disabled
   plugin contributes no agents, and project plugins load only with
   `RHO_TRUST_PROJECT_PLUGINS=1`.
