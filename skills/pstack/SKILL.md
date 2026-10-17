@@ -21,7 +21,7 @@ Rho's `skill` tool; do not preload everything or make trivial edits ceremonial.
 | Finish implementation / verify a fix | `prove-it-works` |
 | Long, multi-phase work needs an evidence trail | `show-me-your-work` |
 | Recurring operator correction | `correct` |
-| Explicit adversarial cross-model challenge | `interrogate` |
+| Explicit cross-model challenge (host delegation required) | `interrogate` |
 | Any PR creation/update/review task | `thermos` — one combined review |
 
 Pick principle skills by the actual decision: domain/types/boundaries before logic;

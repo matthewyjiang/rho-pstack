@@ -1,95 +1,89 @@
 # Validation
 
-Validated with **Rho 2.24.0** and Python 3.13.5. This is a Markdown/plugin package;
-no compiler build or toolchain installation is needed.
+## v0.2: skills-only routing
 
-## Passed checks
+Tested on Rho 2.24.0 and Python 3.13.5. This version removes the companion agents
+and installer. It uses two ordinary `reviewer` calls for thermos; cross-model
+interrogation is optional and requires model-selecting host delegation.
 
-- `python3 scripts/check-package.py`: matching directory/frontmatter names,
-  explicit invocation policy, package-relative link containment and retained
-  upstream MIT notices. Rho itself validates the manifest and real YAML.
-- `python3 -m unittest discover -s tests -v`: four focused behavioral tests cover
-  repeat installation, preservation/preflight refusal of differing files, symlink
-  and invalid-selection refusal, append/single-line decision logs, and untrusted
-  formula/quoted-field handling. Bash syntax inspection passes too.
-- `rho plugins install /absolute/path/to/rho-pstack`: real user-scope copied install.
-- `rho plugins inspect rho-pstack --json`: **28 skills**, loaded/enabled, no problems.
-- `python3 scripts/verify-rho.py`: installed inventory and exact runtime-asset bytes
-  match the checkout, including shared references, companion definitions/scripts,
-  and license notices. This compares packaged definitions, not customized installed
-  copies under `~/.rho/agents`.
-- Live loading after the helper fix: **28 successful direct `skill` completion
-  receipts**, with the model reporting all 28 requested names. Evidence:
-  `/tmp/rho-pstack-live-2n32f8bu/`. The calls were sequential despite a batching
-  request. Final instruction/documentation refinements were checked statically
-  and compared against the final installed copy afterward.
-- Rho `agents` diagnostics loaded **all eight companion definitions** in an
-  isolated HOME fixture with **no invalid entries**. Only Matt's selected
-  openai/cliproxy/local panel is installed in the real global agent directory.
-  Evidence: `/tmp/rho-pstack-all-definitions.log`.
+- Package consistency checks pass for all 28 skill names, explicit invocation
+  policy, relative file links and retained MIT notices. Rho parses real YAML and
+  the Agent Plugins 1.0.0 manifest.
+- The two retained behavioral tests exercise the decision-log helper's append,
+  single-line, quoted-field round-trip and formula-prefix sanitation behavior.
+  Tests for the removed companion installer were removed with that feature.
+- Matt's pre-existing `~/.rho/agents/reviewer.md` override and the three previously
+  installed pstack reviewer definitions were moved to a recoverable directory
+  under `~/.rho/agent-backups/`. Other agents, instructions, credentials and provider
+  configuration were left untouched. Rho diagnostics report no invalid definitions.
+- The stock reviewer source has read tools only and no provider/model pin or shell.
+  Parent prompts now supply Git/PR evidence and immutable source context; children
+  are not instructed to run Git or validation commands.
 
-**Live-receipt limitation:** Rho's CLI event stream includes the tool name, call ID
-and success/failure, but not its arguments or loaded-source body. The verifier
-therefore checks successful-call counts and **model-reported** distinct-name coverage;
-it does not independently attest per-name source identity. Inventory and installed
-bytes are independently checked. The script fails on any observed failed/missing
-call, unexpected tool/count, nonzero run exit or reported-name mismatch, but does
-not advertise a stronger proof than this interface supplies.
+- A real `rho plugins install /absolute/path/to/rho-pstack --force` replaces the
+  copied install. Its agent definitions and old installer are absent; no loose
+  pstack reviewer files or local reviewer override remain in discovery.
+- `scripts/verify-rho.py --live` passes: installed runtime bytes match, 28 direct
+  skill calls complete successfully, and the model reports all requested names.
+  Local evidence: `/tmp/rho-pstack-live-u4tehtlf/` and
+  `/tmp/rho-pstack-v02-live.log`. This is not per-source attestation (see below).
 
-A pre-existing loose `thermo-nuclear-code-quality-review` skill shadowed the plugin
-and required direct invocation. The live test caught it; it was preserved under
-`~/.rho/skill-backups/` outside discovery, then all requested loads succeeded.
-No remaining conflicting loose names were found in this validation workspace.
-Existing user instructions, ordinary reviewers and provider configuration were
-not changed. Future loose/project skill collisions still need inspection.
+## Built-in parallel thermos test
 
-## Parallel thermos test
+An end-to-end standalone CLI run loaded the installed thermos skill and reviewed
+immutable inline snapshots of `review-routing.md`, `thermos/SKILL.md` and
+`interrogate/SKILL.md`. The parent supplied identical pinned scope/intent/evidence
+plus full respective rubrics/shared contracts in one native agent batch:
 
-The full initial package at `ed0c7229c1931d14126bb9f0096573ecd26acffd` was reviewed
-against Git's empty tree using **one native Rho agent batch**. Both children
-received identical pinned scope/intent/evidence and their respective full rubric.
-Both completed with `state: ok`, with no authentication failure, retry or fallback:
-
-| Lens | Agent / run ID | Actual runtime / provider / model |
+| Lens | Agent / run ID | Terminal runtime / provider / model |
 | --- | --- | --- |
-| Correctness/security | `pstack-reviewer-openai` / `b978f1` | rho / openai-codex / gpt-6.1-sol |
-| Structural quality | `pstack-reviewer-cliproxy` / `5b800e` | rho / cliproxyapi / anthropic/claude-opus-5-5 |
+| Correctness/security | reviewer / `0bba98` | rho / openai-codex / gpt-6.1-sol — ok |
+| Structural quality | reviewer / `7dc38b` | rho / openai-codex / gpt-6.1-sol — ok |
 
-Terminal runtime metadata corroborated the actual provider/model bindings. The
-parent waited for both and synthesized one combined verdict. Exact prompts,
-receipts and synthesis: `/tmp/rho-thermos-ed0c722-w5x3lzdo/`; CLI result:
-`/tmp/rho-pstack-thermos-result.json`.
+Both independent contexts completed with no findings in that focused scope. The
+parent waited for both actual terminal results and synthesized one verdict, with
+no custom agents, fallback, shell use by children, or claims of model diversity.
+This proves the portable same-model execution path in this session, not absence
+of correlated blind spots or repository-wide defects.
 
-The review retained two P2 and two P3 issues in that initial snapshot. They were
-addressed before publication: TSV quote serialization, overly strong live-coverage
-claims, omitted shared-asset comparison, and a stale rationale-heading fragment.
-A focused follow-up review through T3 on Claude Opus 5.5 confirmed the helper fix
-and raised an immutable-read instruction gap plus log-format/evidence-documentation
-issues. These were addressed with explicit `git show`/`git grep`/`git diff` pinned
-reads, CSV-aware TSV-reading instructions, and this updated evidence record.
-The published version includes these follow-up fixes; the initial verdict is not
-misrepresented as a clean review of later bytes.
+Local receipts: `/tmp/rho-pstack-v02-thermos-prompt.txt`,
+`/tmp/rho-pstack-v02-thermos.jsonl`, `/tmp/rho-pstack-v02-thermos-result.json`, and
+the two Rho child result files. The inline snapshots were source-document review,
+not historical diff analysis. No host-backed cross-model run is claimed for v0.2.
 
-## Helper reproduction
+## Evidence limits
 
-An untrusted TSV cell containing literal `"=1+1"` lost its outer quotes under
-CSV-style TSV parsing and became `=1+1`. This was reproduced through the real
-helper and `csv.DictReader`; spreadsheet execution/exfiltration was not tested.
-The new behavioral case failed before the fix and passed afterward. The helper
-now quotes/escapes field contents and neutralizes dangerous prefixes after leading
-whitespace. Original upstream copyright/permission notices remain retained.
-Reproduction/red/green evidence: `/tmp/rho-pstack-tsv-*` on the validation machine.
+The CLI event stream exposes tool names, call IDs and status, but not each call's
+arguments or loaded-source output. `scripts/verify-rho.py --live` therefore checks
+successful direct skill-call counts and model-reported distinct-name coverage;
+it does not independently attest per-name source identity. Static inventory and
+installed runtime bytes are compared independently. The script fails on observed
+failed/missing calls, unexpected tools/counts, nonzero exits or reported-name mismatch.
 
-## Limits of the evidence
+Rho's live agent diagnostics list user/project definitions rather than the entire
+built-in catalog. Absence of a custom `reviewer` there is not by itself proof that
+a launch succeeded; actual built-in reviewer launches are tested separately.
 
-- Parsing optional Anthropic/Google/xAI/Antigravity/Claude-CLI definitions does not
-  prove those accounts, current model IDs or external runtimes are available.
-- This is an invoked skill workflow, not an installed GitHub webhook or CI gate.
-- No real PR was created to test post-audit discussion retrieval or merge rules.
-  No publishing/merging/CI-waiver behavior is authorized by the plugin.
-- Live loading was exercised through the CLI; TUI/ACP mention preprocessing was
-  not exhaustively tested. Start a new session after installation or updates.
-- The helper was tested on the installed Linux Bash, not every spreadsheet or
-  historical shell version. Logs created by an older helper are not repaired.
-- Temporary logs contain local validation receipts, not portable packaged evidence;
-  rerun the documented checks to establish results on another installation.
+No real PR, post-audit discussion retrieval, spreadsheet execution, merge behavior
+or exhaustive TUI/ACP compatibility test is implied. Optional host APIs/providers
+must be checked in each session. Standard thermos review needs no model diversity.
+Temporary evidence paths are local receipts; rerun README checks elsewhere.
+
+## Prior release and preserved fixes
+
+v0.1's provider-bound GPT/Claude thermos test completed both audits against commit
+`ed0c7229c1931d14126bb9f0096573ecd26acffd`. It established that routing worked at that
+time, not that v0.2 needs those definitions. v0.2 supersedes that setup; Git history
+preserves the earlier evidence record.
+
+The earlier audit found that a literal quoted TSV cell `"=1+1"` could lose its quotes
+under CSV-style parsing. This was reproduced through the real helper and
+`csv.DictReader`; a behavioral test failed before the fix and passed afterward.
+The quote-safe serializer, leading-whitespace prefix check, honest live-coverage
+wording, shared-asset comparison and corrected rationale link remain in this version.
+Spreadsheet execution/exfiltration was not demonstrated, and old log rows are not
+retroactively repaired. The original upstream MIT notices remain retained.
+
+An older loose `thermo-nuclear-code-quality-review` skill was previously preserved
+under `~/.rho/skill-backups/` to prevent it shadowing the plugin. Future loose/project
+skill collisions can still change which source a session loads.

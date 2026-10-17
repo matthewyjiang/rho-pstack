@@ -26,10 +26,11 @@ No trademark, endorsement or upstream maintenance relationship is implied.
 - Bundled how/why/architect/interrogate reference files, the decision-log TSV
   template and `show-me-your-work/scripts/log.sh` derive from their pstack paths.
 - All three `skills/thermo*` directories derive from `thermos/skills/` at the
-  pinned commit; the security and quality subagent behavior is folded into the
-  shared provider-bound reviewer definitions and parent-supplied rubrics.
-- `skills/pstack`, shared contracts, companion installer, package checks, tests,
-  provider-binding frontmatter and package documentation are this port's additions.
+  pinned commit; the security and quality subagent behavior is supplied as full
+  rubrics in prompts to Rho's existing reviewer, not custom agent definitions.
+- `skills/pstack`, shared contracts, package checks, tests and package documentation
+  are this port's additions. The v0.1 companion agents/installer were removed in
+  v0.2; optional cross-model interrogation now uses a host-provided delegation API.
 
 This is a curated custom port, not a byte-for-byte mirror and not an upstream
 release. See README for the merge/removal map. Future updates should diff these

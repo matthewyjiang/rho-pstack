@@ -1,6 +1,6 @@
 ---
 name: interrogate
-description: "Adversarial cross-model review to challenge a design or find blind spots. Use for interrogate, challenge this, or stress-test requests; thermos is the default combined PR review."
+description: "Optional host-backed adversarial cross-model review to challenge a design or find blind spots. Report unavailable model-selecting delegation honestly; thermos remains the portable combined PR review."
 license: MIT
 disable-model-invocation: false
 ---
@@ -8,38 +8,42 @@ disable-model-invocation: false
 # Interrogate
 
 Read [the workflow contract](../../references/workflow-contract.md) and
-[review routing](../../references/review-routing.md).
-Different model families provide independent signal; different personas on one
-model do not. Review only: never auto-apply findings.
+[review routing](../../references/review-routing.md). Model diversity—not personas
+on one model—is the independent signal here. No custom agents, model pins, edits
+or automatic fixes. This skill's cross-model path requires host-provided
+model-selecting delegation; standalone Rho's `agent` tool does not provide it.
 
-1. **Scope.** Respect explicit files/diff/PR. Resolve actual base and head commits
-   from PR metadata or branch tracking, not an assumed `main`. For a new repo or
-   working-tree review describe that scope explicitly. Pin SHAs and record dirty
-   state; include staged/unstaged/untracked content only when in scope. If the
-   snapshot changes, invalidate affected conclusions and review the changed portion.
-2. **Intent.** State the intended outcome from the request, commits and PR. Ask only
-   if missing intent materially changes what correctness means.
-3. **Panel.** Inspect `rho` action `agents` and follow routing. Select one reviewer
-   per distinct configured model family, at least two for cross-model review.
-   Do not pass a `model` to `agent` or silently substitute the parent. Missing
-   diversity/auth is a visible blocker, not a successful interrogation.
-4. **Launch.** Fill `references/reviewer-prompt.md` identically for each reviewer:
-   intent, immutable scope/diff/context, `references/rubric.md`, and
-   `references/code-quality-review.md`. Include actual contents, repository
-   constraints and workflow contract. In one batch call
-   `agent({agent_id: "pstack-reviewer-openai", prompt: "<filled brief>"})` and
-   `agent({agent_id: "pstack-reviewer-cliproxy", prompt: "<same filled brief>"})`
-   when that panel is installed. These are examples; available definitions decide.
-   Keep run IDs and await every required completion; do not poll or launch duplicates.
-5. **Synthesize.** Deduplicate by actual issue, record model attribution and
-   disagreements. Apply `references/lead-judgment.md`; inspect the real caller/path
-   yourself before accepting or dismissing. Consensus is signal, never proof.
-6. **Judge.** Bucket findings into Act on (concrete material issue), Consider
-   (valid tradeoff), Noted (not actionable now), Dismissed (wrong/context/style,
-   with rationale). A lone security/correctness finding still warrants investigation.
+1. **Scope and intent.** Resolve the requested files/diff/PR and actual base/head,
+   not an assumed main. Pin requested working-tree evidence if applicable. State
+   the intended outcome and repository constraints; ask only if missing intent
+   materially changes correctness. Parent gathers all Git/PR evidence and pinned
+   context. A moving snapshot invalidates affected conclusions.
+2. **Check capability.** Discover the host's model-selecting delegation API. In
+   T3, inspect `orchestrator_capabilities` and `delegate_task` schemas and live
+   catalog. Choose at least two genuinely different available model families;
+   do not infer diversity from different IDs. Without that capability, state
+   **cross-model interrogation unavailable**, and offer an ordinary same-model
+   `reviewer` pass only if the user accepts. Do not install definitions, change
+   global configuration, or disguise native `agent` calls as model-selecting.
+3. **Launch.** Fill `references/reviewer-prompt.md` with the same intent, pinned
+   scope/evidence, `references/rubric.md`, `references/code-quality-review.md` and
+   workflow contract contents for every reviewer. Supply actual text, not unresolved
+   paths. Require read-only operation, no builds/tests, no delegation, no external
+   actions, and explicit missing-context/status reports. Use immutable evidence
+   or supplied snapshots, never mutable-worktree substitutes. Launch independent
+   host child tasks in one batch following host instructions. Record task IDs,
+   actual models and any errors/substitutions; no top-level conversations or
+   homemade shell model runner. Await every required completion, without polling
+   loops or duplicate work. Failed/unavailable routes are not clean reviews.
+4. **Synthesize.** Deduplicate by actual issue, keep model attribution and disagreements.
+   Apply `references/lead-judgment.md`; verify real paths/counterevidence before
+   accepting or dismissing. Consensus is signal, never proof; a lone security or
+   correctness finding still warrants investigation.
+5. **Judge.** Sort into Act on (concrete material issue), Consider (valid tradeoff),
+   Noted (not actionable now), Dismissed (wrong/context/style, with rationale).
 
-Return Intent; Reviewers (actual runtime/provider/model, run status, count);
-Act on / Consider / Noted / Dismissed with evidence and remedies; Agreement map;
-unreviewed areas/failures. No findings is valid. Failed/incomplete review is not approval.
-For PR work, prefer `thermos` as the one combined review unless a distinct
-interrogation was explicitly requested; don't automatically stack redundant review runs.
+Return Intent; Reviewers (actual provider/model, status, finding count); Act on /
+Consider / Noted / Dismissed with evidence/remedies; Agreement map; failures and
+unreviewed areas. Never describe a user-accepted same-model alternative as
+cross-model interrogation. For PR work, use `thermos` as the one combined review
+unless a distinct interrogation was requested; do not stack redundant review runs.

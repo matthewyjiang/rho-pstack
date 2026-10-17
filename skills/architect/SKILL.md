@@ -29,12 +29,13 @@ paths, importable internals and hand-synced lists. Prefer a smaller interface th
 hides real complexity, not a deeper call chain. Data structures and invariants
 come before logic. Subtract unnecessary state/layers before adding machinery.
 
-For substantial independent design perspectives, use the installed provider-bound
-reviewers per [review routing](../../references/review-routing.md). Supply
+For substantial independent design perspectives, use separate calls to the existing
+`reviewer` per [review routing](../../references/review-routing.md). Same-model
+perspectives are normal; cross-model input is optional when the host provides it. Supply
 `references/runner-prompt.md`, `references/rationale-template.md`, the grounding
 and same task to each in one batch. They return sketches in their results, without
 editing files, creating worktrees or recursively running skills. Otherwise compare
-candidates in the parent. Do not claim multi-model evidence for self-generated designs.
+candidates in the parent. Do not claim model diversity for same-model or self-generated designs.
 Synthesize the best shape; record what won, what was borrowed/rejected and why.
 
 ## Agree and implement

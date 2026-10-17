@@ -21,7 +21,7 @@ def main() -> None:
         raise SystemExit(f"Inventory mismatch: expected {expected}, got {inventory['skill_names']}")
     installed = Path(inventory["root"])
     sources = [ROOT / "plugin.json", ROOT / "LICENSE"]
-    for directory in ("skills", "references", "agents", "scripts", "licenses"):
+    for directory in ("skills", "references", "scripts", "licenses"):
         sources.extend(p for p in (ROOT / directory).rglob("*") if p.is_file() and "__pycache__" not in p.parts)
     for source in sources:
         target = installed / source.relative_to(ROOT)
