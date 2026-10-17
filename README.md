@@ -46,14 +46,6 @@ Repository `AGENTS.md`, user instructions, and permissions always win. See
 [workflow-contract.md](references/workflow-contract.md) and
 [review-routing.md](references/review-routing.md) for the rules the skills follow.
 
-## Validate
-
-```bash
-python3 scripts/check-package.py          # names, links, license notices
-python3 -m unittest discover -s tests     # decision-log helper
-python3 scripts/verify-rho.py [--live]    # installed copy matches checkout; --live costs tokens
-```
-
 ## License
 
 MIT. Derived from [cursor/plugins](https://github.com/cursor/plugins/tree/09d06eb4b97a1020ab31e84030e38baf1099c7dc)
