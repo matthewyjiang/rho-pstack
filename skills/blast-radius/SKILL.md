@@ -1,7 +1,6 @@
 ---
 name: blast-radius
 description: "Trace what a change could break beyond its diff and prove the load-bearing safety assumptions through real code. Use before risky changes or shipping."
-license: MIT
 disable-model-invocation: false
 ---
 

@@ -1,7 +1,6 @@
 ---
 name: why
 description: "Investigate design rationale, historical constraints, regressions, postmortems, or data-backed thresholds. Separate cited facts from inference; use how for runtime behavior."
-license: MIT
 disable-model-invocation: false
 ---
 

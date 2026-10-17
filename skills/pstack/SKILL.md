@@ -1,7 +1,6 @@
 ---
 name: pstack
 description: "Lightweight entry point for Matt’s general engineering workflow. Route nontrivial tasks to design, proof, relevant principles, and thermos for every PR; no autonomy or merge-policy changes."
-license: MIT
 disable-model-invocation: false
 ---
 

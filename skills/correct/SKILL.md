@@ -1,14 +1,12 @@
 ---
 name: correct
 description: "Turn recurring agent mistakes into structural prevention: architecture, types, actionable lint, then behavior tests. Use after a repeated correction or when asked to harden the workflow."
-license: MIT
 disable-model-invocation: false
 ---
 
 # Correct
 
 Read [the workflow contract](../../references/workflow-contract.md).
-Derived from `correct` and `principle-encode-lessons-in-structure`.
 
 Find recurring mistake classes in relevant commits, reverts, reviews, corrections
 and repository instructions. Distinguish demonstrated recurrence from a speculative

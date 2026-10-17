@@ -1,7 +1,6 @@
 ---
 name: sharpen
 description: "Frame a task before starting: expert methods, real user outcome, useful constraints, and an independent check. Use when a request is vague, overconstrained, or ready to execute."
-license: MIT
 disable-model-invocation: false
 ---
 

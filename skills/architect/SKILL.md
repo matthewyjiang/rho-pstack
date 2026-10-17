@@ -1,7 +1,6 @@
 ---
 name: architect
 description: "Sketch caller usage, types, signatures and module ownership before nontrivial implementation. Compare distinct designs, then implement only within the requested scope."
-license: MIT
 disable-model-invocation: false
 ---
 

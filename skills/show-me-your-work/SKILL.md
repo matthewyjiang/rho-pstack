@@ -1,7 +1,6 @@
 ---
 name: show-me-your-work
 description: "Keep an evidence-linked decision trail for long or multi-phase work, then audit it against this Rho conversation and actual artifacts. Local by default; no automatic commits."
-license: MIT
 disable-model-invocation: false
 ---
 

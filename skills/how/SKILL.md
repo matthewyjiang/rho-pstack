@@ -1,7 +1,6 @@
 ---
 name: how
 description: "Explain subsystem architecture, runtime flow, placement, ownership, or layering before changing code. Use for how-does-this-work questions and grounding a nontrivial design."
-license: MIT
 disable-model-invocation: false
 ---
 

@@ -1,14 +1,12 @@
 ---
 name: prove-it-works
 description: "Verify task outputs through the actual artifact or real user path before declaring completion. Use after implementation, fixes, migrations, or delegated work."
-license: MIT
 disable-model-invocation: false
 ---
 
 # Prove it works
 
 Read [the workflow contract](../../references/workflow-contract.md).
-Derived from pstack's `principle-prove-it-works`.
 
 Check the real artifact, not proxies, cached screenshots, file mtimes, a delegate's
 summary or "it compiles". For a bug fix reproduce the user-visible failure first;

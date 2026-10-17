@@ -1,7 +1,6 @@
 ---
 name: interrogate
 description: "Optional adversarial cross-model review to challenge a design or find blind spots, using per-call agent models or host delegation. Report unavailable model selection honestly; thermos remains the portable combined PR review."
-license: MIT
 disable-model-invocation: false
 ---
 
