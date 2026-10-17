@@ -1,57 +1,46 @@
-# Review routing without custom agents
+# Review routing
 
-This is a skills-only plugin. Do not install agent definitions, override `reviewer`,
-pin models in global configuration, or change credentials to run it.
-Read [the workflow contract](workflow-contract.md) first.
+Read [the workflow contract](workflow-contract.md) first. This plugin is skills only:
+never install agents, override `reviewer`, pin models, or touch credentials to run it.
 
-## Portable Rho path
+## Standard review: built-in `reviewer`
 
-Use the existing `reviewer` agent via `agent({agent_id: "reviewer", prompt: brief})`.
-Each call starts a separate context and normally inherits the parent provider/model.
-Thermos calls it twice in one batch, supplying a different full rubric to each.
-**Same-model review is the normal supported mode**, not a degraded fallback. Two
-contexts/lenses are useful but are not model diversity. If an existing user/project
-override selects a different model, report the actual binding; never edit that
-configuration or infer diversity from agent IDs.
+Call `agent({agent_id: "reviewer", prompt: brief})`. Each call is a fresh context
+that normally inherits the parent's model. Thermos makes two calls in one batch,
+each with a different full rubric. Same-model review is the normal mode, not a
+fallback, but two lenses are not model diversity. If a user override binds a
+different model, report the actual binding and leave it alone.
 
-The built-in reviewer has read tools, not a shell or nested delegation. The parent
-must collect Git diffs/history, PR discussion and validation results. Supply the
-actual scoped diff, full rubric, shared constraints and necessary source context
-in each prompt, or expose a parent-prepared immutable snapshot through readable
-paths. Do not tell the child to run `git show`, `git diff`, builds or shell commands.
-For committed scope, the **parent** obtains pinned source with Git, not live-file
-reads. Children may read a supplied immutable snapshot, but must not substitute a
-mutable worktree for it. If required context/tools are unavailable, report the gap;
-the parent can collect the missing evidence and rerun the affected review. Missing
-coverage or an agent error is never approval.
+The reviewer has read tools only: no shell, no delegation. So the parent:
 
-Retain run IDs and await all required completions through Rho's automatic delivery.
-Do not busy-poll, launch duplicates, or finish after the first of two required passes.
-Reviewers do not edit, commit, publish or run tests. The parent owns authorized
-validation (max eight build jobs, verbose logs redirected). Respect repository/user
-policy, and verify findings rather than counting votes.
+- Collects diffs, history, PR discussion, and validation results itself, and puts
+  the scoped diff, full rubric, constraints, and needed source in each prompt (or in
+  an immutable snapshot the child can read). Never tell a child to run Git or builds.
+- Gets committed source through Git, not live files. A child must not swap a supplied
+  snapshot for the mutable worktree.
+- Reports missing context or tools. Missing coverage or an agent error is never approval.
+- Keeps run IDs and waits for every required result. No polling, no duplicates,
+  no finishing after one of two passes.
+- Owns validation (max 8 build jobs, logs redirected). Reviewers don't edit, commit,
+  publish, or run tests. Verify findings; don't count votes.
 
-## Optional host-backed cross-model interrogation
+## Optional: cross-model `interrogate`
 
-`interrogate` uses model-selecting delegation **only when the host exposes it**.
-For example, in T3 Code:
+Only when the host exposes model-selecting delegation (e.g. T3 Code):
 
-1. Discover `orchestrator_capabilities` and `delegate_task` through the available
-   tool catalog and read their schemas. Use the live provider/model catalog, not
-   hard-coded slugs. Follow the host's own delegation instructions.
-2. Choose genuinely different available model families. Submit self-contained,
-   read-only tasks with the same pinned scope, intent, evidence and full rubric.
-   Batch independent launches; keep every task ID and await all results. Use stable
-   request IDs for retries where supported; do not create top-level conversations.
-3. Disclose actual provider/model bindings, substitutions, failed routes and gaps.
-   Missing auth or a failed task is not a clean review. Never change credentials,
-   install a toolchain, or wrap `rho run` in a homemade model runner to bypass this.
+1. Find `orchestrator_capabilities` and `delegate_task` in the tool catalog and read
+   their schemas. Use the live model catalog, not hard-coded IDs, and follow the
+   host's delegation instructions.
+2. Pick genuinely different model families. Send self-contained, read-only tasks
+   with identical scope, intent, evidence, and rubric. Batch launches, keep task IDs,
+   await all results, and use stable request IDs for retries. No top-level threads.
+3. Report actual provider/model bindings, substitutions, failures, and gaps. A failed
+   task is not a clean review. Never change credentials, install toolchains, or wrap
+   `rho run` as a homemade model runner.
 
-Without model-selecting host delegation, say **cross-model interrogation is
-unavailable in this session**. Offer an ordinary same-model `reviewer` pass, but
-only run that substitute if the user accepts; do not call it cross-model review.
-This limitation does not block thermos, architecture, or evidence-trail review.
+Without such delegation, say **cross-model interrogation is unavailable in this
+session**. Offer a same-model `reviewer` pass, run it only if the user accepts, and
+never call it cross-model. Thermos and the other skills still work.
 
-A provider/model field belongs to the host's model-selecting API, **not** Rho's
-native `agent` call. Native calls take only `agent_id` and `prompt`; no Cursor Task,
-`subagent_type`, `readonly`, per-call `model`, or background flag is needed.
+Model fields belong to the host's API. Rho's native `agent` takes only `agent_id`
+and `prompt`.
