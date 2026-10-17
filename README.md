@@ -2,8 +2,8 @@
 
 Matt's engineering workflow as a [Rho Agent Plugin](https://agent-plugins.org/specification):
 design first, prove the result, and run one combined `thermos` review per PR.
-It ships skills plus two read-only reviewer agents pinned to different model
-families. There is no installer.
+It ships skills plus the two thermos review agents. There is no installer and no
+model pin.
 
 A port of Lauren Tan's **pstack** v0.15.25 and Cursor's **thermos** v1.0.0.
 
@@ -37,13 +37,14 @@ $interrogate challenge this design with a different model
 | Review | `thermos`, `thermo-nuclear-review`, `thermo-nuclear-code-quality-review`, `interrogate` |
 | Principles | 15 `principle-*` skills |
 
-- **thermos** runs two reviewers in parallel, correctness/security on
-  `pstack-reviewer-openai` and code quality on `pstack-reviewer-anthropic`, then
-  merges the results into one verdict. If either agent isn't loaded or fails, that
-  lens falls back to Rho's built-in `reviewer`, which uses the parent's model.
-- **interrogate** challenges a design across at least two model families, using the
-  shipped reviewers or a host that delegates to other models, such as T3 Code's
-  `delegate_task`. Without two families it says cross-model review is unavailable.
+- **thermos** runs its two lens agents in parallel, one for correctness/security
+  and one for code quality, then merges the results into one verdict. Both use the
+  parent's model. If a lens agent isn't loaded or fails, that lens falls back to
+  Rho's built-in `reviewer`.
+- **interrogate** challenges a design across at least two model families, chosen
+  per call through the `agent` tool's `model` field or through a host that delegates
+  to other models, such as T3 Code's `delegate_task`. Without two families it says
+  cross-model review is unavailable.
 
 ## Agents
 
@@ -51,22 +52,23 @@ Agent Plugins 1.0 standardizes only skills and MCP, so the agents live in Rho's
 extension directory, `io.github.matthewyjiang.rho/agents/` (spec §8.2). Other
 clients ignore it.
 
-| Agent | Model family | Default binding |
+| Agent | Lens | Loads rubric |
 | --- | --- | --- |
-| `pstack-reviewer-openai` | OpenAI GPT | `openai-codex` / `gpt-6.1-sol` |
-| `pstack-reviewer-anthropic` | Anthropic Claude | `cliproxyapi` / `anthropic/claude-opus-5-5` |
+| `thermo-nuclear-review-subagent` | correctness/security | `thermo-nuclear-review` |
+| `thermo-nuclear-code-quality-review-subagent` | code quality | `thermo-nuclear-code-quality-review` |
 
-Both are `runtime: rho`, so they also run under T3 Code host delegation. They have
-read, search, `skill` and shell tools and no edit tools.
+These mirror upstream Thermos' two subagents. Each loads its rubric skill itself,
+so the thermos prompt carries only the scope and evidence. Both are `runtime: rho`
+and inherit the parent's model, so they also run under T3 Code host delegation, and
+a per-call `model` can move a lens to another model. They have read, search, `skill`
+and shell tools and no edit tools.
 
 - **Rho version.** Loading these needs a Rho build with plugin-agent support. Older
   builds load only the skills, and the review skills fall back to `reviewer`.
-- **Rebinding.** The bindings are Matt's setup; `cliproxyapi` is a custom provider.
-  To use your own model, copy the shipped file into `~/.agents/agents`,
-  `~/.rho/agents` or `<project>/.agents/agents` and change only `provider`/`model`.
-  An override replaces the whole definition, so keep `tools` and the body; omitting
-  `tools` grants every tool, including edits. User and project agent files override
-  plugin agents with the same id.
+- **Overrides.** An agent file with the same id in `~/.agents/agents`,
+  `~/.rho/agents` or `<project>/.agents/agents` overrides the plugin's. It replaces
+  the whole definition, so start from a copy of the shipped file and keep `tools`;
+  omitting `tools` grants every tool, including edits.
 - **Plugin scope.** A project-scope plugin overrides a user-scope one. A disabled
   plugin contributes no agents, and project plugins load only with
   `RHO_TRUST_PROJECT_PLUGINS=1`.

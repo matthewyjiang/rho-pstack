@@ -1,60 +1,62 @@
 # Review routing
 
 Read [the workflow contract](workflow-contract.md) first. Never edit agent
-definitions, pin models in calls, or touch credentials to make a review run.
+definitions or touch credentials to make a review run.
 
-## Reviewers
+## Agents
 
-Rho binds models in agent definitions, not in `agent` arguments, so the plugin ships
-read-only reviewers pinned to different model families in
-`io.github.matthewyjiang.rho/agents/`:
+The plugin ships the two thermos lenses as Rho agents in
+`io.github.matthewyjiang.rho/agents/`. Each one loads its own rubric skill, so the
+parent sends only the shared scope/evidence packet, never the rubric text.
 
-| Agent id | Family |
-| --- | --- |
-| `pstack-reviewer-openai` | OpenAI GPT |
-| `pstack-reviewer-anthropic` | Anthropic Claude |
-| `reviewer` (built-in) | parent's family (inherits the parent model) |
+| Agent id | Lens | Rubric it loads |
+| --- | --- | --- |
+| `thermo-nuclear-review-subagent` | correctness/security | `thermo-nuclear-review` |
+| `thermo-nuclear-code-quality-review-subagent` | code quality | `thermo-nuclear-code-quality-review` |
 
-The id names the family; the definition's frontmatter holds the binding. A user or
-project agent file with the same id replaces it, so other setups rebind there. Read the
-actual binding from the run result or `rho` action `agents`. An id is not proof of a
-model, and a loaded definition is not proof of working credentials.
+Both inherit the parent's model and have read, search, `skill` and shell tools,
+with no edit tools. Other review passes (interrogate, design perspectives, trail
+audits) use Rho's built-in `reviewer`.
 
-## Pick and fall back
+## Fall back
 
-1. Use a panel the user asked for. Otherwise pick shipped reviewers by family as the
-   calling skill says, then batch the `agent` calls (`agent_id` and `prompt` only).
-2. If an id is not loaded (older Rho without plugin agents, plugin disabled, or an
-   invalid override) or its run fails to bind, authenticate or finish, relaunch that
-   pass with the built-in `reviewer` and the same prompt. Report the failed id, the
-   raw error and the substitution. A failed run is never "no findings".
-3. `reviewer` inherits the parent's family. Count it as that family when a skill
-   needs diversity, and never call two passes on one family cross-model.
+If a plugin agent is not loaded (a Rho build without plugin-agent support, the
+plugin disabled, or an invalid override), or its run fails, relaunch that pass on
+`reviewer`. Use the same packet and add one line: "Load the `<rubric>` skill and
+follow it as the complete rubric." Report the failed id, the raw error and the
+substitution. A failed run is never "no findings".
 
-These are `runtime: rho` definitions, so they also work under T3 Code host
-delegation: the child Rho loads the same definition from plugin discovery.
+## Models
+
+Agents run on the parent's model unless the call passes `model`
+(`provider/model`, a catalog id, or an `@alias`), on Rho builds with per-call
+model selection. Use only models the user named or configured. An unknown model,
+missing credentials or an older Rho that rejects the field is an explicit error:
+report it and do not guess another id. Report the bound provider/model from the
+run receipt. An agent id or a requested model is not proof of what ran. Two passes
+on one model family are not cross-model review.
 
 ## Brief every reviewer the same way
 
 Reviewers are read-only and do not delegate. Shell, where a reviewer has it, is for
 read-only Git/`gh` inspection, not a sandbox. The parent:
 
-- Resolves pinned base/head (or a pinned snapshot) and puts the scope, diff or changed
-  paths, full rubric, constraints and needed source in each prompt. Reviewers with a
+- Resolves pinned base/head (or a pinned snapshot) and puts the scope, diff or
+  changed paths, constraints and needed source in each prompt. Reviewers with a
   shell may read more through `git show <head>:<path>` or `git diff <base> <head>`;
-  the built-in `reviewer` may lack a shell, so include what it cannot fetch. Never
-  substitute the mutable worktree for pinned source.
+  a reviewer without one gets what it cannot fetch. Never substitute the mutable
+  worktree for pinned source.
 - Reports missing context or tools. Missing coverage or an agent error is never approval.
 - Keeps run IDs and waits for every required result. No polling, no duplicates,
   no finishing after one of two passes.
 - Owns validation (max 8 build jobs, logs redirected). Reviewers don't edit, commit,
-  publish, or run tests. Verify findings; don't count votes.
+  publish, or run builds/tests, even where their own instructions allow it.
+  Verify findings; don't count votes.
 
 ## Other models through the host
 
-When the shipped families aren't enough (the user asks for another model, or a
-shipped reviewer failed and diversity is required), use host model-selecting
-delegation if it exists, e.g. T3 Code:
+When per-call `model` is unavailable, or a model is outside Rho's catalog, use host
+model-selecting delegation if it exists, e.g. T3 Code:
 
 1. Find `orchestrator_capabilities` and `delegate_task` in the tool catalog and read
    their schemas. Use the live model catalog, not hard-coded IDs, and follow the
