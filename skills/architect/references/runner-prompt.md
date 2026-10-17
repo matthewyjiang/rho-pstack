@@ -2,8 +2,8 @@
 
 The parent supplies the task, user/repo constraints and how/why grounding. Return
 one candidate design in your result; do not edit files, build, create worktrees,
-or delegate. Use supplied context and available read tools; ask the parent to
-collect missing Git/shell evidence instead of assuming the reviewer has a shell.
+or delegate. Use supplied context and available read tools (shell, if present,
+only for read-only Git inspection); otherwise ask the parent for missing evidence.
 
 - Write realistic caller usage first; derive types/signatures from it, not vice versa.
 - Trace dominant access patterns. Choose data structures, state owners and invariant

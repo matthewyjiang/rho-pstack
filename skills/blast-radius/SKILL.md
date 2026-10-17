@@ -23,10 +23,12 @@ elsewhere, including dependencies a symbol search cannot see.
    script importing the shipped library often beats a persuasive explanation.
    Parent runs validation; no delegate builds. If execution needs unavailable
    credentials/hardware or would have unsafe effects, mark it **unproven**.
-6. For broad/high-risk review, an independent `reviewer` pass can pressure-test the
-   assumptions. Use `interrogate` for cross-model input only when the host supports
-   it. Do not block ordinary proof on model diversity or duplicate PR review:
-   `thermos` remains the single combined PR review entry point.
+6. For broad/high-risk review, an independent reviewer pass can pressure-test the
+   assumptions: prefer a shipped `pstack-reviewer-*` from a different family than
+   the parent, falling back to `reviewer` per review routing. Use `interrogate`
+   for a full cross-model challenge. Do not block ordinary proof on model
+   diversity or duplicate PR review: `thermos` remains the single combined PR
+   review entry point.
 
 Report: what changed; the facts safety depends on; proof artifacts/commands and
 observed results; risks with evidence; cleared cases; cheapest meaningful check

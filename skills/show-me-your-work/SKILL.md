@@ -47,7 +47,8 @@ For a high-stakes trail, request an independent reviewer via
 excerpts and relevant receipts explicitly; do not assume a child has the parent's
 conversation. No edits/builds. Ask it to flag weak evidence, unproved verification,
 scope drift and risky choices, not redo the task. The existing `reviewer` normally
-inherits the parent model; independent context is useful without model diversity.
+inherits the parent model; a shipped `pstack-reviewer-*` from another family adds
+model diversity, but independent context is useful without it.
 Do not claim review if no reviewer completed.
 
 Return an **Attention** section for a run with a trail: actual reviewer/model and

@@ -1,6 +1,6 @@
 ---
 name: interrogate
-description: "Optional host-backed adversarial cross-model review to challenge a design or find blind spots. Report unavailable model-selecting delegation honestly; thermos remains the portable combined PR review."
+description: "Optional adversarial cross-model review to challenge a design or find blind spots, using the plugin's pinned reviewers or host model delegation. Report missing model diversity honestly; thermos remains the combined PR review."
 license: MIT
 disable-model-invocation: false
 ---
@@ -9,29 +9,33 @@ disable-model-invocation: false
 
 Read [the workflow contract](../../references/workflow-contract.md) and
 [review routing](../../references/review-routing.md). Model diversity—not personas
-on one model—is the independent signal here. No custom agents, model pins, edits
-or automatic fixes. This skill's cross-model path requires host-provided
-model-selecting delegation; standalone Rho's `agent` tool does not provide it.
+on one model—is the independent signal here. No edits, automatic fixes, or changes
+to agent definitions. Diversity comes from the shipped `pstack-reviewer-*` agents,
+which pin model families, or from host model-selecting delegation.
 
 1. **Scope and intent.** Resolve the requested files/diff/PR and actual base/head,
    not an assumed main. Pin requested working-tree evidence if applicable. State
    the intended outcome and repository constraints; ask only if missing intent
    materially changes correctness. Parent gathers all Git/PR evidence and pinned
    context. A moving snapshot invalidates affected conclusions.
-2. **Check capability.** Discover the host's model-selecting delegation API. In
-   T3, inspect `orchestrator_capabilities` and `delegate_task` schemas and live
-   catalog. Choose at least two genuinely different available model families;
-   do not infer diversity from different IDs. Without that capability, state
-   **cross-model interrogation unavailable**, and offer an ordinary same-model
-   `reviewer` pass only if the user accepts. Do not install definitions, change
-   global configuration, or disguise native `agent` calls as model-selecting.
+2. **Pick the panel.** Default to `pstack-reviewer-openai` and
+   `pstack-reviewer-anthropic` through native `agent` calls; this also works under
+   T3 Code. If one is not loaded or fails, fall back per review routing: the
+   built-in `reviewer` counts as the parent's family, so it keeps diversity only
+   when that family differs from the surviving reviewer's. For other models, or to
+   restore a lost family, use host model-selecting delegation (in T3, inspect
+   `orchestrator_capabilities` and `delegate_task` and the live catalog). Need at
+   least two genuinely different families; do not infer diversity from ids. Without
+   them, state **cross-model interrogation unavailable**, and offer a same-model
+   `reviewer` pass only if the user accepts. Do not edit definitions or global
+   configuration to manufacture diversity.
 3. **Launch.** Fill `references/reviewer-prompt.md` with the same intent, pinned
    scope/evidence, `references/rubric.md`, `references/code-quality-review.md` and
    workflow contract contents for every reviewer. Supply actual text, not unresolved
    paths. Require read-only operation, no builds/tests, no delegation, no external
    actions, and explicit missing-context/status reports. Use immutable evidence
    or supplied snapshots, never mutable-worktree substitutes. Launch independent
-   host child tasks in one batch following host instructions. Record task IDs,
+   child runs in one batch (host tasks follow host instructions). Record run IDs,
    actual models and any errors/substitutions; no top-level conversations or
    homemade shell model runner. Await every required completion, without polling
    loops or duplicate work. Failed/unavailable routes are not clean reviews.
