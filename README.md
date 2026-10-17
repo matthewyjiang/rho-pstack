@@ -5,7 +5,7 @@ design first, prove the result, and run one combined `thermos` review per PR.
 It ships skills plus the two thermos review agents. There is no installer and no
 model pin.
 
-A port of Lauren Tan's [**pstack**](https://github.com/cursor/plugins/tree/main/pstack) v0.15.25 and Cursor's **thermos** v1.0.0.
+A port of Lauren Tan's [**pstack**](https://github.com/cursor/plugins/tree/main/pstack) v0.15.25 and Cursor's [**thermos**](https://github.com/cursor/plugins/tree/main/thermos) v1.0.0.
 
 ## Install
 
