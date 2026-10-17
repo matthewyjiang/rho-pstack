@@ -58,17 +58,18 @@ clients ignore it.
 | `thermo-nuclear-code-quality-review-subagent` | code quality | `thermo-nuclear-code-quality-review` |
 
 These mirror upstream Thermos' two subagents. Each loads its rubric skill itself,
-so the thermos prompt carries only the scope and evidence. Both are `runtime: rho`
-and inherit the parent's model, so they also run under T3 Code host delegation, and
-a per-call `model` can move a lens to another model. They have read, search, `skill`
-and shell tools and no edit tools.
+so the thermos prompt carries only the scope and evidence. Both inherit the parent's
+model, and a per-call `model` can move a lens to another one. Because they are
+`runtime: rho`, they also run under T3 Code host delegation. Neither has edit
+tools; their shell is limited to read-only Git/`gh` by instruction, not by sandbox.
 
 - **Rho version.** Loading these needs a Rho build with plugin-agent support. Older
-  builds load only the skills, and the review skills fall back to `reviewer`.
+  builds load only the skills, and `thermos` falls back to `reviewer`.
 - **Overrides.** An agent file with the same id in `~/.agents/agents`,
-  `~/.rho/agents` or `<project>/.agents/agents` overrides the plugin's. It replaces
-  the whole definition, so start from a copy of the shipped file and keep `tools`;
-  omitting `tools` grants every tool, including edits.
+  `~/.rho/agents` or `<project>/.agents/agents` (project files need
+  `RHO_TRUST_PROJECT_AGENTS=1`) overrides the plugin's. It replaces the whole
+  definition, so start from a copy of the shipped file and keep `tools`; omitting
+  `tools` grants every tool, including edits.
 - **Plugin scope.** A project-scope plugin overrides a user-scope one. A disabled
   plugin contributes no agents, and project plugins load only with
   `RHO_TRUST_PROJECT_PLUGINS=1`.

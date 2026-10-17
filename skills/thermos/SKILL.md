@@ -31,9 +31,10 @@ Prepare the same packet for both children:
   checks, failures and environment limits labeled honestly.
 
 The parent gathers Git history/diffs and supplies them inline or as a readable
-immutable snapshot. The lens agents can read more pinned source with read-only
-Git (`git show <head>:<path>`); a reviewer without a shell gets whatever it cannot
-fetch. Do not duplicate every file unnecessarily, and give important new evidence
+immutable snapshot. With a working delegated shell the lens agents can read more
+pinned source (`git show <head>:<path>`); without one (no-shell `reviewer`, or a
+permission mode that denies it), inline the pinned source they need, per review
+routing. Do not duplicate every file unnecessarily, and give important new evidence
 to both reviewers. Never let a child read mutable worktree files as if they were
 the pinned revision.
 

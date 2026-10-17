@@ -9,9 +9,9 @@ disable-model-invocation: false
 
 Read [the workflow contract](../../references/workflow-contract.md) and
 [review routing](../../references/review-routing.md). Model diversity—not personas
-on one model—is the independent signal here. No custom agents, model pins, edits
-or automatic fixes. Models come from per-call `model` on Rho's `agent`, or from
-host model-selecting delegation.
+on one model—is the independent signal here. It uses `reviewer`, not the thermos
+lens agents; no model pins in definitions, edits or automatic fixes. Models come
+from per-call `model` on Rho's `agent`, or from host model-selecting delegation.
 
 1. **Scope and intent.** Resolve the requested files/diff/PR and actual base/head,
    not an assumed main. Pin requested working-tree evidence if applicable. State
