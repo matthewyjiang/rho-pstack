@@ -36,7 +36,7 @@ The installed plugin also contains the script and definitions, so setup can run
 from `~/.agents/plugins/rho-pstack/scripts/install-agents.py` after a copied install.
 
 Matt's preset uses his configured `openai-codex` and `cliproxyapi` routes. For native
-API providers instead:
+Rho providers instead:
 
 ```bash
 python3 ~/projects/rho-pstack/scripts/install-agents.py --preset native
@@ -181,9 +181,11 @@ The package checker checks names, invocation policy, local-link containment and
 upstream notices; Rho itself parses the real YAML/manifest. The focused tests drive
 the installer (idempotency, no overwrite, symlink refusal, selection preflight) and
 TSV helper (append behavior and untrusted-cell sanitation). `verify-rho.py` compares
-Rho's installed inventory and installed file bytes against this checkout. Use its
+Rho's installed inventory and runtime-asset bytes against this checkout. Use its
 `--live` option to exercise actual skill tool loading with your configured model;
-it costs a model request and reports any load failure. See
+it costs model requests and reports failed tool calls. CLI event receipts omit
+arguments and loaded-source bodies, so successful-call counts are runtime-verified
+but the distinct-name coverage is model-reported, not an independent source audit. See
 [VALIDATION.md](VALIDATION.md) for the checks performed for this release.
 
 Loose/built-in skills outrank plugin skills; near project plugins can outrank this

@@ -34,6 +34,9 @@ examples instead. Existing differing files are refused; inspect/edit them yourse
    to each reviewer. Include the actual rubric/skill body and all relevant referenced
    instructions, not merely a path. Reviewers may inspect surrounding source with
    available tools; no child builds, edits, commits, pushes, or nested review runs.
+   For committed scope, use `git show <head>:<path>`, `git grep ... <head>` and
+   `git diff <base> <head>`, or a parent-supplied immutable snapshot. Do not use
+   live-worktree reads for pinned source: even a clean checkout can change later.
 7. Retain both run IDs, wait for both terminal results through automatic delivery,
    and investigate concrete findings yourself. Unfinished/failed review is incomplete.
    Model agreement raises confidence but does not replace an execution trace or proof.

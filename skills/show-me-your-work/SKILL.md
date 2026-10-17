@@ -14,6 +14,11 @@ Use `references/decision-log-template.tsv` and
 `scripts/log.sh <logfile> <phase> <decision> <why> <evidence> <result>`.
 Columns are ts (ISO8601), phase, decision, why, evidence pointer, result. Cells stay
 single-line. The helper sanitizes tabs/newlines and spreadsheet formula prefixes.
+The helper writes quoted TSV: double quotes within fields are doubled. Read it
+with a CSV-aware tab-delimited reader, such as Python `csv.DictReader(...,
+delimiter="\t")`, not raw `cut`/`awk` field comparisons. The leading apostrophe
+neutralizes formula prefixes for display; it is part of the parsed text. Existing
+rows written by an older helper are not retroactively made quote-safe.
 Evidence is a resolvable commit, file/line, run ID, PR or artifact, not a paragraph.
 Log meaningful forks, verification checkpoints, pivots, reverts and blockers.
 

@@ -22,6 +22,7 @@ Loading a skill authorizes no unrelated work, external action, or persistent pol
   follow returned anchors. Never search unrelated conversations for convenience.
 - Delegate only substantial independent work. State ownership before parallel work.
   `agent` takes `agent_id` and a self-contained `prompt`, not a model or background flag.
+  Begin delegate prompts with a short task heading on its own line, then the brief.
   Batch independent calls; retain run IDs, await delivered completions, and never
   claim completion while required children are outstanding. No polling loops.
   Children cannot recursively delegate. Supply actual instructions/evidence in prompts.

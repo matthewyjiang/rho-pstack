@@ -58,6 +58,17 @@ class DecisionLogTests(unittest.TestCase):
             self.assertEqual(rows[1]["evidence"], "'-path")
             self.assertEqual(rows[1]["result"], "pass")
 
+    def test_quoted_untrusted_cells_round_trip_without_becoming_formulas(self):
+        with tempfile.TemporaryDirectory() as directory:
+            log = Path(directory) / "decisions.tsv"
+            helper = ROOT / "skills/show-me-your-work/scripts/log.sh"
+            subprocess.run(["bash", str(helper), str(log), "check", '"=1+1"', 'a "quoted" reason', "  =1+1", "open"], check=True)
+            with log.open(newline="") as stream:
+                row = next(csv.DictReader(stream, delimiter="\t"))
+            self.assertEqual(row["decision"], '"=1+1"')
+            self.assertEqual(row["why"], 'a "quoted" reason')
+            self.assertEqual(row["evidence"], "'  =1+1")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -23,19 +23,18 @@ if [ ! -s "$logfile" ]; then
 fi
 
 ts="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
-# Strip tabs/newlines/CR so cells stay on one line, and prefix any cell
-# whose first char a spreadsheet would parse as a formula (=, +, -, @)
-# with a single quote. The skill expects this log to be read in
-# spreadsheets, so attacker-controlled evidence (PR titles, filenames,
-# generated text) must not become formula execution when a reviewer
-# opens the file.
+# Keep cells single-line, neutralize spreadsheet formulas (including after
+# whitespace), and quote/escape TSV fields so a reader cannot reinterpret
+# user-supplied double quotes as delimiters and expose a hidden formula.
 clean() {
-	local v
+	local v leading_trimmed
 	v=$(printf '%s' "$1" | tr '\t\n\r' '   ')
-	case "$v" in
-		=*|+*|-*|@*) printf "'%s" "$v" ;;
-		*) printf '%s' "$v" ;;
+	leading_trimmed="${v#"${v%%[![:space:]]*}"}"
+	case "$leading_trimmed" in
+		=*|+*|-*|@*) v="'$v" ;;
 	esac
+	v="${v//\"/\"\"}"
+	printf '"%s"' "$v"
 }
 printf '%s\t%s\t%s\t%s\t%s\t%s\n' \
 	"$ts" "$(clean "$1")" "$(clean "$2")" "$(clean "$3")" "$(clean "$4")" "$(clean "$5")" \
