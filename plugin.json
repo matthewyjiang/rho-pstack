@@ -1,0 +1,9 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "rho-pstack",
+  "version": "0.1.0",
+  "description": "Matt's design-first engineering workflow: an attributed Rho port of pstack and thermos.",
+  "author": {"name": "Matthew Jiang"},
+  "repository": "https://github.com/matthewyjiang/rho-pstack",
+  "license": "MIT"
+}
