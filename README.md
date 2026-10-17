@@ -10,8 +10,7 @@ A port of Lauren Tan's **pstack** v0.15.25 and Cursor's **thermos** v1.0.0.
 ## Install
 
 ```bash
-git clone git@github.com:matthewyjiang/rho-pstack.git ~/projects/rho-pstack
-rho plugins install "$HOME/projects/rho-pstack"   # absolute path required
+rho plugins install https://github.com/matthewyjiang/rho-pstack.git
 ```
 
 Start a new Rho session so it picks up the skills and agents. To update, `git pull` and
