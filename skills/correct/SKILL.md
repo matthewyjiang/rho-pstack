@@ -8,7 +8,6 @@ disable-model-invocation: false
 # Correct
 
 Read [the workflow contract](../../references/workflow-contract.md).
-Derived from `correct` and `principle-encode-lessons-in-structure`.
 
 Find recurring mistake classes in relevant commits, reverts, reviews, corrections
 and repository instructions. Distinguish demonstrated recurrence from a speculative

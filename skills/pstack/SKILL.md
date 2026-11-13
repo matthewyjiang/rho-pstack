@@ -13,7 +13,6 @@ Rho's `skill` tool; do not preload everything or make trivial edits ceremonial.
 
 | Task | Route |
 | --- | --- |
-| Unclear framing / useful independent check | `sharpen` |
 | Mechanism, ownership or layering unknown | `how` |
 | Historical rationale or hidden constraints | `why` |
 | Nontrivial architecture / state model | `architect` |

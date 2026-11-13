@@ -1,18 +1,17 @@
 ---
 name: sharpen
-description: "Frame a task before starting: expert methods, real user outcome, useful constraints, and an independent check. Use when a request is vague, overconstrained, or ready to execute."
+description: "Make a task deeper, not bigger, then rewrite the prompt. Returns only the rewritten prompt; user-invoked."
 license: MIT
-disable-model-invocation: false
+disable-model-invocation: true
 ---
 
-# Sharpen
+I want a deeper version of this task, not a bigger one. Before rewriting it, do four things:
 
-Read [the workflow contract](../../references/workflow-contract.md).
-Before starting, consider how a top expert would approach this task: primary
-sources, real methods, and an outside check that the result is right. Identify what
-the user actually needs and whether the task is over- or underspecified. Propose
-relaxing constraints that obstruct the goal, but never silently loosen explicit
-requirements, safety boundaries or repository policy. Leave material user choices
-open and ask when needed. Fold in only what improves the work, not what makes it
-bigger. Keep an independent check, then do the requested work; do not hand back a
-rewritten prompt as the deliverable.
+1. Say what a top professional in this field would do here that I'm not asking for.
+2. Name the rawest material they would start from instead of what has already been digested for me.
+3. Name the specific methods and tools they would use.
+4. Say what, other than you or me, would show the result is right.
+
+Then rewrite my prompt to ask for exactly that.
+
+Leave choices that are mine to make open instead of deciding them.
