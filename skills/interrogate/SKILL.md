@@ -1,6 +1,6 @@
 ---
 name: interrogate
-description: "Optional adversarial cross-model review to challenge a design or find blind spots, using per-call agent models or host delegation. Report unavailable model selection honestly; thermos remains the portable combined PR review."
+description: "Optional adversarial cross-model review: adversaries on different model families try to break a change or design, and only findings proven by a run survive. Report unavailable model selection honestly; thermos remains the portable combined PR review."
 license: MIT
 disable-model-invocation: false
 ---
@@ -8,43 +8,57 @@ disable-model-invocation: false
 # Interrogate
 
 Read [the workflow contract](../../references/workflow-contract.md) and
-[review routing](../../references/review-routing.md). Model diversity—not personas
-on one model—is the independent signal here. It uses `reviewer`, not the thermos
-lens agents; no model pins in definitions, edits or automatic fixes. Models come
-from per-call `model` on Rho's `agent`, or from host model-selecting delegation.
+[review routing](../../references/review-routing.md). Adversaries try to break a
+change or a design. A finding survives only when a run proves it. Report the
+findings. Do not apply fixes.
 
-1. **Scope and intent.** Resolve the requested files/diff/PR and actual base/head,
-   not an assumed main. Pin requested working-tree evidence if applicable. State
-   the intended outcome and repository constraints; ask only if missing intent
-   materially changes correctness. Parent gathers all Git/PR evidence and pinned
-   context. A moving snapshot invalidates affected conclusions.
-2. **Check capability.** Prefer `reviewer` calls with per-call `model` (see review
-   routing), using models the user named or configured aliases; ask once if none
-   are known. Otherwise discover the host's model-selecting delegation API (in T3,
-   `orchestrator_capabilities`, `delegate_task` and the live catalog). Choose at
-   least two genuinely different model families; do not infer diversity from
-   different IDs. Without either, state **cross-model interrogation unavailable**,
-   and offer an ordinary same-model `reviewer` pass only if the user accepts. Do
-   not install definitions or change global configuration.
-3. **Launch.** Fill `references/reviewer-prompt.md` with the same intent, pinned
-   scope/evidence, `references/rubric.md`, `references/code-quality-review.md` and
-   workflow contract contents for every reviewer. Supply actual text, not unresolved
-   paths. Require read-only operation, no builds/tests, no delegation, no external
-   actions, and explicit missing-context/status reports. Use immutable evidence
-   or supplied snapshots, never mutable-worktree substitutes. Launch independent
-   child runs in one batch (host tasks follow host instructions). Record run IDs,
-   actual models and any errors/substitutions; no top-level conversations or
-   homemade shell model runner. Await every required completion, without polling
-   loops or duplicate work. Failed/unavailable routes are not clean reviews.
-4. **Synthesize.** Deduplicate by actual issue, keep model attribution and disagreements.
-   Apply `references/lead-judgment.md`; verify real paths/counterevidence before
-   accepting or dismissing. Consensus is signal, never proof; a lone security or
-   correctness finding still warrants investigation.
-5. **Judge.** Sort into Act on (concrete material issue), Consider (valid tradeoff),
-   Noted (not actionable now), Dismissed (wrong/context/style, with rationale).
+## Frame
 
-Return Intent; Reviewers (actual provider/model, status, finding count); Act on /
-Consider / Noted / Dismissed with evidence/remedies; Agreement map; failures and
-unreviewed areas. Never describe a user-accepted same-model alternative as
-cross-model interrogation. For PR work, use `thermos` as the one combined review
-unless a distinct interrogation was requested; do not stack redundant review runs.
+The scope is what the user names. Otherwise it is the branch diff from its merge
+base with the base branch, through the working tree; resolve the real base, not an
+assumed `main`, and pin it. State the intent in your own words from the user's
+message, the commits and the PR description. Ask the user when the intent is unclear.
+
+## Fan out
+
+Pick at least two genuinely different model families: per-call `model` on Rho's
+`agent`, or host model-selecting delegation (see review routing). Use models the
+user named or configured; ask once if none are known. Without two families, say
+**cross-model interrogation unavailable** and offer a same-model `reviewer` pass
+only if the user accepts.
+
+Launch one `reviewer` per model in one batch, each with the pinned scope, the
+intent and this brief:
+
+> Break this change. Each finding needs a repro against the real code: a failing
+> test, a script, or a command, given in full so it can be run as written, plus
+> the output you expect it to print and the output the intent requires. For a
+> design or plan, give a prototype or a probe of the current tree. Do not run
+> builds or tests yourself and do not edit files; the parent runs every repro.
+> Leave out anything without a runnable repro. That covers style, naming,
+> structure, and risks that need a future change to matter. No findings is a
+> valid result.
+
+Record run IDs and the actual bound models. A failed run is not a clean review.
+
+## Verify
+
+Run each repro yourself in a scratch location (a temp dir or a `git worktree` at
+the pinned head), never in the user's working tree; max 8 build jobs, logs to a
+temp file. Keep a finding when the output shows the failure and the failure
+breaks the intent. Drop the rest. Merge findings that share a root cause.
+Adversaries find different failures, so keep every verified finding; consensus is
+not proof and a lone finding is not noise.
+
+## Output
+
+- **Intent**: the restatement.
+- **Adversaries**: each one's actual provider/model, status and finding count.
+- **Findings**: for each verified finding, the command, its output, how it breaks
+  the intent, and the adversaries that found it. Say "no verified findings" when
+  none survive.
+- **Dropped**: for each adversary, the count of dropped findings and why.
+
+Never describe a user-accepted same-model pass as cross-model interrogation. For
+PR work, `thermos` is the one combined review unless the user asked for a distinct
+interrogation.

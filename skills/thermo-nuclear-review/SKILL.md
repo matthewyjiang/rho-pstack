@@ -84,7 +84,3 @@ Do not present unfinished research as a finding. Do not write “the client has 
 Return the reviewed base/head and diff identity, scope (including any requested working-tree snapshot), audit status, validation evidence used, and relevant limitations. Findings require **file and line, priority, evidence, a concrete failure/exploit scenario, and an actionable remedy**. Use pinned-snapshot lines and explain changed-code causality. Include uncertainty where it genuinely remains; do not manufacture a finding to fill the report.
 
 Lead with verified findings ordered by severity. If none are found, explicitly say so for this lens and describe coverage/limitations; do not promise that nothing could have slipped through. A failed or incomplete audit is not a clean result, and a single-lens result does not approve the combined PR review.
-
-## Attribution
-
-Adapted from Cursor's **Thermos v1.0.0**, canonical `cursor/plugins` commit `09d06eb4b97a1020ab31e84030e38baf1099c7dc`, under the [MIT license](../../licenses/thermos-MIT.txt). Preserves the substantive diff-scoped audit, intended-breakage, devex, feature-leak, severity, and fresh-audit-before-discussion rules, ported to Rho's review workflow without prose-style mandates.

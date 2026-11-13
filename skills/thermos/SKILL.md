@@ -88,10 +88,3 @@ limitations. Same-model
 review does not prove absence of correlated blind spots. Thermos ends at the review
 report: fixes, commits, PR publication, merging and CI decisions need their own
 user/repository authority. Repository/user policy always takes priority.
-
-## Attribution
-
-Adapted from Cursor's **Thermos v1.0.0**, canonical `cursor/plugins` commit
-`09d06eb4b97a1020ab31e84030e38baf1099c7dc`, under the
-[MIT license](../../licenses/thermos-MIT.txt). Retains the full dual-rubric review
-and fresh-audit-before-discussion workflow on Rho agents.

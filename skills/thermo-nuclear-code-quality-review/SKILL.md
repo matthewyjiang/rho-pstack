@@ -170,7 +170,3 @@ Prefer high-conviction structural findings over cosmetic nits. Correct behavior 
 Treat demonstrated material regressions in those areas as presumptive blockers unless the author provides a sound justification. Explain the impact and remedy; do not turn taste, hypothetical rewrites, or an arbitrary file-size threshold into blockers. Report “no findings in this lens” only after completing the audit, with scope and limitations. A single-lens result does not approve the combined PR review.
 
 In thermos, return the independent audit before reading PR/MR discussions or the other reviewer's conclusions. The parent performs post-audit discussion validation and synthesis, avoiding anchored initial reviews.
-
-## Attribution
-
-Adapted from Cursor's **Thermos v1.0.0**, canonical `cursor/plugins` commit `09d06eb4b97a1020ab31e84030e38baf1099c7dc`, under the [MIT license](../../licenses/thermos-MIT.txt). The measured structural-growth lens replaces the upstream universal line-count rule; this port retains the substantive quality rubric without imposing prose-style mandates.
