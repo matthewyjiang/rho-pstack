@@ -14,9 +14,12 @@ parent sends only the shared scope/evidence packet, never the rubric text.
 | `thermo-nuclear-review-subagent` | correctness/security | `thermo-nuclear-review` |
 | `thermo-nuclear-code-quality-review-subagent` | code quality | `thermo-nuclear-code-quality-review` |
 
-Both inherit the parent's model; their frontmatter holds the tool list. Other
-review passes (interrogate, design perspectives, trail audits) use Rho's built-in
-`reviewer`.
+Both inherit the parent's model; their frontmatter holds the tool list.
+
+Any review of code or a diff goes through `thermos`, never a bare `reviewer`.
+Rho's built-in `reviewer` is only the fallback for a failed lens (below) and the
+runner for passes the thermos rubrics don't fit: architect's design sketches,
+show-me-your-work's trail audits, and interrogate's repro-only adversaries.
 
 ## Fall back
 
